@@ -2,12 +2,12 @@ package fauxpas.eventqueue;
 
 import fauxpas.event.Event;
 
-import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class EventQueue {
 
-    private Executor eventExecutor;
+    private ExecutorService eventExecutor;
 
     public EventQueue() {
         this.eventExecutor = Executors.newSingleThreadExecutor();
@@ -15,6 +15,10 @@ public class EventQueue {
 
     public void enqueue(Event event) {
         eventExecutor.execute( () -> event.process() );
+    }
+
+    public void cleanup() {
+        eventExecutor.shutdown();
     }
 
 }
