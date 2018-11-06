@@ -1,8 +1,28 @@
 # fp-event-queue
-A general purpose event dispatching and processing library for Java.
+Very-very basic wrappers around Java ExecutorService with Supplier, Consumer functional interfaces wrapped in a ProducerConsumerEvent functional interface for enqueuing.
 
-## Goals v 0.1.0 :
+## v0.1.0 :
 
-1. Provide an extensible interface used to define events.
+Create a single thread event queue for linear event processing.
 
-2. Provide a first in first out event queue, with push operation, and event processing thread. 
+```java
+SingleQueue myEventQueue = new SingleQueue()
+
+myEventQueue.enqueue( () -> System.out.println("Hello!") );
+
+myEventQueue.enqueue( new ProduceConsumeEvent<String>( () -> "hello", System.out::println ) );
+```
+
+Or create a multi-thread work sharing queue.
+
+```java
+SharedQueue myEventQueue = new SharedQueuePool(2);
+```
+
+#### Important Note:
+
+You must call clean-up or your application may not terminate as expected.
+
+```java
+myEventQueue.cleanup();
+``` 
